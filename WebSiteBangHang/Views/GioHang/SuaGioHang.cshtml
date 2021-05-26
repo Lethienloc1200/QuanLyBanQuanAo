@@ -1,0 +1,94 @@
+﻿@using WebSiteBangHang.Models
+@model ItemGioHang
+@{
+    ViewBag.Title = "SuaGioHang";
+    Layout = "~/Views/Layout/ProductLayout.cshtml";
+}
+
+<h2>SuaGioHang</h2>
+
+@{ 
+    List<ItemGioHang> lstGioHang = ViewBag.GioHang as List<ItemGioHang>;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+            @if (Model == null)
+            {
+                <h1>Giỏ hàng  trống</h1>
+            }
+            else
+            {
+                <div style="border: 2px solid gray">
+                    <table class="table">
+                        <tr>
+                            <td>Mã SP</td>
+                            <td>Tên sản phẩm</td>
+                            <td>Hình ảnh</td>
+                            <td>Đơn giá</td>
+                            <td>Số lượng</td>
+                            <td>Thành tiền</td>
+                        </tr>
+                        @foreach (var item in lstGioHang)
+                        {
+
+                            //sản phẩm co mã sản phẩm được chỉnh guier tuef bên trang sem giỏ hàng
+                            if (Model.MaSP == item.MaSP)
+                            {
+                                using (Html.BeginForm("CapNhatGioHang", "GioHang"))
+                                {
+
+
+                                    <tr>
+                                        <td>@item.MaSP @Html.Hidden("MaSP",item.MaSP)</td>
+                                        <td>@item.TenSP</td>
+                                        <td><img src="@Url.Content("~/Content/HinhAnhSP/"+item.HinhAnh)" width="50" height="50" /></td>
+                                        <td>@item.DonGia.ToString("#,##")</td>
+                                        <td>@Html.TextBox("SoLuong", item.SoLuong,new {@class="SoLuongThayDoi" })
+                                            <p id="TB_SoLuongThayDoi"></p>
+                                            </td> 
+                                        <td>@item.ThanhTien.ToString("#,##")</td>
+                                        <td>
+                                            <input type="submit" value="cập nhật" id="btnCapNhatGH" />
+                                            @Html.ActionLink("Xóa", "XoaGioHang", new { @MaSP = item.MaSP })
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>@item.MaSP</td>
+                                    <td>@item.TenSP</td>
+                                    <td><img src="@Url.Content("~/Content/HinhAnhSP/"+item.HinhAnh)" width="50" height="50" /></td>
+                                    <td>@item.DonGia.ToString("#,##")</td>
+                                    <td>@item.SoLuong</td>
+                                    <td>@item.ThanhTien.ToString("#,##")</td>
+                                    <td>
+                                        @Html.ActionLink("Sửa", "SuaGioHang", new { @MaSP = item.MaSP }),
+                                        @Html.ActionLink("Xóa", "XoaGioHang", new { @MaSP = item.MaSP })
+                                   </td>
+                                </tr>
+                            }
+
+                        }
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+
+</div>
+@*=========Kiểm tra hợp lệ số luonwngj sản phầm là số âm hay chữ=======================*@
+<script>
+    $("#btnCapNhatGH").click(function () {
+        //kiểm tra số lượng không phải là số hay nhỏ hơn 0
+        var SoLuong = $(".SoLuongThayDoi").val();
+        if (isNaN(SoLuong) == true || SoLuong < 0) {
+            $("#TB_SoLuongThayDoi").text("Số lượng không hợp lệ!!!");
+            return false;
+        }
+    });
+</script>

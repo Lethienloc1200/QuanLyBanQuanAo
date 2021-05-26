@@ -1,0 +1,69 @@
+﻿@using WebSiteBangHang.Models;
+@model IEnumerable<DonDatHang>
+
+@{
+    ViewBag.Title = "ChuaThanhToan";
+    Layout = "~/Views/Layout/AdminLayout.cshtml";
+    WebGrid grid = new WebGrid(source: Model, rowsPerPage: 20);
+}
+
+<h2 style=" text-align: center">Quản lý đơn hàng</h2>
+<h3>Danh sách chưa thanh toán</h3>
+
+<hr />
+<ul class="nav nav-tabs">
+    <li role="presentation" class="active"><a href="@Url.Action("ChuaThanhToan","QuanLyDonHang")">Chưa thanh toán</a></li>
+    <li role="presentation" class=""><a href="@Url.Action("ChuaGiao","QuanLyDonHang")">Chưa giao</a></li>
+    <li role="presentation" class=""><a href="@Url.Action("DaGiaoDaThanhToan","QuanLyDonHang")">Đã giao đã thanh toán</a></li>
+</ul>
+<br />
+<br />
+
+
+
+
+@*//////////////////////*@
+@grid.GetHtml(
+
+   tableStyle: "divTable",
+   headerStyle: "gridHead",
+   footerStyle: "gridFooter",
+   rowStyle: "gridRow",
+   alternatingRowStyle: "gridAltRow",
+   columns: grid.Columns(
+   grid.Column("MaDDH",header: "Mã đơn đặt hàng"),
+   grid.Column("MaKH",header: "Họ tên KH",format: p => p.MaKH != null ? p.KhachHang.TenKH:""),
+   grid.Column("NgayDat", "Ngày đặt"),
+   grid.Column("TinhTrangGiaoHang", "Tình trạng giao hàng"),
+    grid.Column("NgayGiao", "Ngày giao"),
+     grid.Column("DaThanhToan", "Đã thanh toán"),
+      grid.Column("Uudai", "ưu đãi"),
+       grid.Column("NgayDat", "Ngày đặt"),
+         //grid.Column("DaHuy", "Đã hủy"),
+         grid.Column(format: p=>Html.ActionLink("Duyêt đơn hàng", "DuyetDonHang", new {id = p.MaDDH},new {@target="_black"}))
+   ))
+<style>
+    .nav > li{
+        background-color:lightgreen;
+        border : 1px solid yellow;
+    }
+    .divTable{
+        width:100%;
+        border: 1px solid;
+    }
+    .divTable td{
+        border: 1px solid blue;
+
+    }
+    .gridHead {
+        background-color: greenyellow;
+    }
+
+    .gridFooter{
+        font-weight: bold;
+
+    }
+    .divTable a{
+        color:blue;
+    }
+</style>

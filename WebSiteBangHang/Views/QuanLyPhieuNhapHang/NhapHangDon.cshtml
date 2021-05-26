@@ -1,0 +1,63 @@
+﻿@using WebSiteBangHang.Models;
+@model SanPham
+
+@{
+    ViewBag.Title = "NhapHangDon";
+    Layout = "~/Views/Layout/AdminLayout.cshtml";
+}
+
+    <h2 style="     
+        text-align: center;
+        border: 1px solid;
+        padding: 10px;
+        background: #07b4079e"
+        
+        >Nhập hàng cho sản phẩm @Model.TenSP</h2>
+    <hr />
+    <div class="the_ body" style="border: 1px solid; padding: 20px;">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="imgSP">
+                    <img style="width: 200px; height: 200px;" src="@Url.Content("~/Content/HinhAnhSP/"+Model.HinhAnh)" />
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <div class="ttSP">
+                    <h3> Hãng sản xuất : @Model.NhaSanXuat.TenNSX</h3>
+                    <h3> Loại Sản phẩm : @Model.LoaiSanPham.TenLoai</h3>
+                    <h3> Số lượng tồn : @Model.SoLuongTon</h3>
+                </div>
+            </div>
+        </div>
+        <br />
+        <h3>Thông tin nhập nhàng</h3>
+
+
+
+
+        @using (Html.BeginForm("NhapHangDon", "QuanLyPhieuNhapHang"))
+        {
+            @Html.Hidden("MaSP", Model.MaSP)
+            <div class="row">
+                <div class="col-md-4">
+                    @{var lstNCC = (SelectList)ViewBag.MaNCC; }
+                    Nhà cung cấp: @Html.DropDownList("MaNCC", lstNCC, new { @class = "MaNCC" })
+                </div>
+                <div class="col-md-4">
+                    Số lượng nhập: @Html.TextBox("SoLuongNhap");
+                </div>
+                <div class="col-md-4">
+                    Đơn giá nhập: @Html.TextBox("DonGiaNhap");
+                </div>
+                <div class="col-md-4">
+
+                </div>
+
+
+            </div>
+            <div class="clear right" style="text-align: right" ;>
+                <br />
+                <input type="submit" class=" btn btn-success" value="Nhập hàng" />
+            </div>
+        }
+    </div>

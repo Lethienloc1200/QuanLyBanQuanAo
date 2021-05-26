@@ -1,0 +1,88 @@
+﻿@model IEnumerable<WebSiteBangHang.Models.KhachHang>
+@{
+    ViewBag.Title = "KhachHang";
+    Layout = "~/Views/Layout/AdminLayout.cshtml";
+    WebGrid grid = new WebGrid(source: Model, rowsPerPage: 20);
+
+}
+
+@*thể hiện dữ liệu thông qua controller webgrid*@
+@using (Html.BeginForm())
+{
+    
+    <div id="Khung">
+    <h2>Danh Sách Khách Hàng</h2>
+
+    @grid.GetHtml(
+
+                 tableStyle: "gridTable",
+                 headerStyle: "gridHead",
+                 footerStyle: "gridFooter",
+                 rowStyle: "gridRow",
+                 alternatingRowStyle: "gridAltRow",
+                 columns: grid.Columns(
+                 grid.Column("MaKH", "Mã KH"),
+                 grid.Column("TenKH", "Tên KH"),
+                  grid.Column("DiaChi", "Địa chỉ"),
+                  grid.Column("Email", "Email"),
+                  grid.Column("SoDienThoai", "Số điện thoại"))
+
+                 )
+
+</div>
+}
+<br />
+<br />
+<input type="button" value="In danh sách" id="btnInDonHang" />
+
+<script>
+    $("#btnInDonHang").click(function () {
+        var content = $("#Khung").html();
+        InDonHang(content);
+    });
+
+    //phương thức in javascript
+    function InDonHang(content) {
+        var printWindow = window.open('', 'height=400,width=800');
+        printWindow.document.write('<html><head><title>DIV Contents</title>');
+        printWindow.document.write('</head><body >');
+        printWindow.document.write(content);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+
+    }
+</script>
+
+<style>
+
+    table.gridTable {
+        width: 100%;
+    }
+
+    img {
+        width: 150x;
+        height: 150px;
+    }
+
+    .gridTable {
+        border: 2px solid Black;
+    }
+
+        .gridTable td {
+            border: 1px solid blue;
+        }
+
+
+    .gridHead {
+        background: Green;
+    }
+
+        .gridHead > td {
+            padding: 20px;
+        }
+
+            .gridHead > td > a {
+                color: white;
+            }
+</style>

@@ -1,0 +1,152 @@
+﻿
+@using WebSiteBangHang.Models;
+@model List<ItemGioHang>
+
+@{
+    ViewBag.Title = "XemGioHang";
+    Layout = "~/Views/Layout/ProductLayout.cshtml";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+            @*Gọi cái list<itemGioHang> nếu không có sản phẩm nào thị hiển thị Giỏ hngaf trống Ngoài ra *@
+            @if (Model == null || Model.Count == 0)
+            {
+                <h1>Giỏ Hàng  trống</h1>
+            }
+            else
+            {
+              
+                    <table class="table">
+                        <tr>
+                            <td>Mã SP</td>
+                            <td>Tên sản phẩm</td>
+                            <td>Hình ảnh</td>
+                            <td>Đơn giá</td>
+                            <td>Số lượng</td>
+                            <td>Thành tiền</td>
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.MaSP</td>
+                                <td>@item.TenSP</td>
+                                <td><img src="@Url.Content("~/Content/HinhAnhSP/"+item.HinhAnh)" width="50" height="50" /></td>
+                                <td>@item.DonGia.ToString("#,##")</td>
+                                <td>@item.SoLuong</td>
+                                <td>@item.ThanhTien.ToString("#,##")</td>
+                                <td>
+                                    @Html.ActionLink("Sửa", "SuaGioHang", new { @MaSP = item.MaSP })
+                                    @Html.ActionLink("Xóa", "XoaGioHang", new { @MaSP = item.MaSP })
+                                </td>
+                            </tr>
+                        }
+                    </table>
+
+                     @*coi lại cái này để sauwr lỗi kiểm tra tính hợp lệ*@
+                        using (Html.BeginForm("DatHang", "GioHang"))
+                                {
+                                    if (Session["TaiKhoan"] == null) /*Nếu chưa đăng nhập thì xuất hiện cái form điền thông tin Mua Hàng*/
+                                    {
+                                <div class="ThongTinMuaHang" style="padding:15px; background: #4f434336; width: 400px; }">
+                                    <table align="center" class="table">
+                                        <tr>
+                                            <td>Thông tin khách hàng</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Họ tên</td>
+                                            <td>
+                                                @Html.TextBox("TenKH")
+                                                <p style="color:red;" id="TB_TenKH"></p>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>Địa chỉ</td>
+                                            <td>
+                                                @Html.TextArea("DiaChi")
+                                                <p style="color:red;" id="TB_DiaChi"></p>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>Email</td>
+                                            <td>
+                                                @Html.TextBox("Email")
+                                                <p style="color:red;" id="TB_Email"></p>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>SDT</td>
+                                            <td>@Html.TextBox("SoDienThoai")
+                                                <p style="color:red;" id="TB_SDT"></p>
+                                            </td>
+                                            
+                                        </tr>
+
+                                    </table>
+                                </div>
+                                //Phần kiểm tra tính hợp lệ sản phẩm nhưng bỏ vào trong này thì bị lỗi
+                                <script>
+                                    $("#btnDatHang").click(function () {
+                                var loi = 0;
+                                if ($("#TenKH").val() == "") {
+                                            $("#TB_TenKH").text("Tên kh không được bỏ trống");
+                                    loi++;
+                                }
+                                        else {
+                                            $("#TB_TenKH").text("");
+                                }
+                                //==============================
+                                if ($("#DiaChi").val() == "") {
+                                            $("#TB_DiaChi").text("Dia Chi không được bỏ trống");
+                                    loi++;
+                                }
+                                        else {
+                                            $("#TB_DiaChi").text("");
+                                }
+                                //===================
+                                if ($("#SoDienThoai").val() == "") {
+                                            $("#TB_SDT").text("SDT không được bỏ trống");
+                                    loi++;
+                                }
+                                        else {
+                                            $("#TB_SDT").text("");
+                                }
+                                //============================
+                                var loi;
+                                dinhdang = /^[0-9A-Za-z]+[0-9A-Za-z_]*@@[\w\d.]+\.\w{2,4}$/;
+                                KTemail = dinhdang.test($('#Email').val());
+                                if (!KTemail) {
+                                            $("#TB_Email").text("Email không hợp lệ");
+                                    loi++;
+                                }
+
+                                if (loi != 0) {
+                                    return false;
+                                }
+                            });
+
+                                </script>
+
+                            }
+
+                        //==================================
+                            <div class="div_dat_hangg">
+                                <input type="submit" value="Đặt hàng" id="btnDatHang" />
+                                @Html.ActionLink("Mua tiếp", "Index", "Home", new { @class = "btn btn-success" })
+                            </div>
+                        }
+
+
+              
+            }
+        </div>
+    </div>
+</div>
+@*======Kiểm tra tính hợp lệ trong đơn đặt hàng*@
+
+@*//Bị lỗi không kiểm tra hợp lệ đuọc*@
